@@ -14,8 +14,8 @@
       "@server/*": [
         "./apps/server/src/*"
       ],
-      "@web/*": [
-        "./apps/web/*"
+      "@client/*": [
+        "./apps/client/*"
       ]
     }
   }
