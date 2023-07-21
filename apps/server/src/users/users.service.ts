@@ -7,7 +7,7 @@ import { CreateUserResponse } from './types'
 
 @Injectable()
 export class UsersService {
-  constructor(@Inject(DB) private db: DbType) { }
+  constructor(@Inject(DB) private db: DbType) {}
 
   async list(): Promise<User[]> {
     return this.db.select().from(user)

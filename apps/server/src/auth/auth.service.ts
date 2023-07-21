@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common'
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger
+} from '@nestjs/common'
 import { LoginDto, SignupDto } from './dto'
 import * as argon2 from 'argon2'
 import { Tokens } from './types'
@@ -12,7 +17,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService
-  ) { }
+  ) {}
 
   async signup(dto: SignupDto): Promise<Tokens> {
     const userExists = await this.usersService.findByEmail(dto.email)
@@ -58,12 +63,14 @@ export class AuthService {
   async refreshTokens(id: number, refreshToken: string) {
     const user = await this.usersService.findById(id)
 
+    console.log(user)
+
     if (!user || !user.refresh_token)
       throw new ForbiddenException('Access Denied')
 
     const refreshTokenMatches = await argon2.verify(
       user.refresh_token,
-      refreshToken,
+      refreshToken
     )
 
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied')
