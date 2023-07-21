@@ -1,3 +1,3 @@
-export * from './tokens.type'
-export * from './jwtPayload.type'
-export * from './jwtPayloadWithRt.type'
+export * from '../../common/types/tokens.type'
+export * from '../../common/types/jwtPayload.type'
+export * from '../../common/types/jwtPayloadWithRt.type'

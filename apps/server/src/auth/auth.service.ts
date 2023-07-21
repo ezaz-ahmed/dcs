@@ -2,88 +2,87 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
-  Logger
 } from '@nestjs/common'
 import { LoginDto, SignupDto } from './dto'
 import * as argon2 from 'argon2'
 import { Tokens } from './types'
-import { UsersService } from '@server/users/users.service'
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
+import { DonorService } from '@server/donor/donor.service'
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    private donorService: DonorService,
     private jwtService: JwtService,
     private configService: ConfigService
-  ) {}
+  ) { }
 
   async signup(dto: SignupDto): Promise<Tokens> {
-    const userExists = await this.usersService.findByEmail(dto.email)
+    const donorExists = await this.donorService.findByEmail(dto.email)
 
-    if (userExists) {
+    if (donorExists)
       throw new BadRequestException('User already exists')
-    }
 
     const hash = await this.hashData(dto.password)
 
-    const newUser = await this.usersService.create({
+    const newDonor = await this.donorService.create({
       name: dto.name,
       email: dto.email,
-      refresh_token: '',
       hash
     })
 
-    const tokens = await this.getTokens(newUser[0].id, newUser[0].role)
+    const tokens = await this.getTokens(newDonor[0].id, newDonor[0].name)
 
-    await this.updateRefreshToken(newUser[0].id, tokens.refresh_token)
+    await this.updateRefreshToken(newDonor[0].id, tokens.refresh_token)
 
     return tokens
   }
 
   async signin(loginDto: LoginDto) {
-    const user = await this.usersService.findByEmail(loginDto.email)
+    const donor = await this.donorService.findByEmail(loginDto.email)
 
-    if (!user) throw new BadRequestException('User does not exist')
+    if (!donor)
+      throw new BadRequestException('User does not exist')
 
-    const passwordMatches = await argon2.verify(user.hash, loginDto.password)
+    const passwordMatches = await argon2.verify(
+      donor.hash, loginDto.password
+    )
 
-    if (!passwordMatches) throw new BadRequestException('Password is incorrect')
+    if (!passwordMatches)
+      throw new BadRequestException('Password is incorrect')
 
-    const tokens = await this.getTokens(user.id, user.role)
-    await this.updateRefreshToken(user.id, tokens.refresh_token)
+    const tokens = await this.getTokens(donor.id, donor.name)
+    await this.updateRefreshToken(donor.id, tokens.refresh_token)
     return tokens
   }
 
   logout(id: number) {
-    return this.usersService.update(id, { refresh_token: null })
+    return this.donorService.update(id, { refresh_token: null })
   }
 
   async refreshTokens(id: number, refreshToken: string) {
-    const user = await this.usersService.findById(id)
+    const donor = await this.donorService.findById(id)
 
-    console.log(user)
-
-    if (!user || !user.refresh_token)
+    if (!donor || !donor.refresh_token)
       throw new ForbiddenException('Access Denied')
 
     const refreshTokenMatches = await argon2.verify(
-      user.refresh_token,
+      donor.refresh_token,
       refreshToken
     )
 
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied')
 
-    const tokens = await this.getTokens(user.id, user.role)
-    await this.updateRefreshToken(user.id, tokens.refresh_token)
+    const tokens = await this.getTokens(donor.id, donor.name)
+    await this.updateRefreshToken(donor.id, tokens.refresh_token)
     return tokens
   }
 
   private async updateRefreshToken(id: number, refreshToken: string) {
     const hashedRefreshToken = await this.hashData(refreshToken)
 
-    await this.usersService.update(id, {
+    await this.donorService.update(id, {
       refresh_token: hashedRefreshToken
     })
   }
@@ -92,12 +91,12 @@ export class AuthService {
     return argon2.hash(data)
   }
 
-  private async getTokens(id: number, role: string) {
+  private async getTokens(id: number, name: string) {
     const [access_token, refresh_token] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: id,
-          role
+          name
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -108,7 +107,7 @@ export class AuthService {
       this.jwtService.signAsync(
         {
           sub: id,
-          role
+          name
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),

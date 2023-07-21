@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1689929375737,
-      "tag": "0000_breezy_famine",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1689929455587,
-      "tag": "0001_outstanding_jimmy_woo",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1689930854964,
-      "tag": "0002_messy_misty_knight",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1689930933894,
-      "tag": "0003_small_white_tiger",
+      "when": 1689954155366,
+      "tag": "0000_unusual_squirrel_girl",
       "breakpoints": true
     }
   ]

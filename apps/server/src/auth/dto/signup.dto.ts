@@ -8,14 +8,14 @@ import {
 
 export class SignupDto {
   @IsNotEmpty()
-  @IsEmail()
-  email: string
-
-  @IsNotEmpty()
   @IsString()
   @MinLength(3)
   @MaxLength(50)
   name: string
+
+  @IsNotEmpty()
+  @IsEmail()
+  email: string
 
   @IsNotEmpty()
   @IsString()
