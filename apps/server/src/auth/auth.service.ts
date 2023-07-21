@@ -26,10 +26,13 @@ export class AuthService {
     const newUser = await this.usersService.create({
       name: dto.name,
       email: dto.email,
+      refresh_token: '',
       hash
     })
 
     const tokens = await this.getTokens(newUser[0].id, newUser[0].role)
+
+    await this.updateRefreshToken(newUser[0].id, tokens.refresh_token)
 
     return tokens
   }
@@ -46,6 +49,14 @@ export class AuthService {
 
   refreshToken() {
 
+  }
+
+  private async updateRefreshToken(id: number, refreshToken: string) {
+    const hashedRefreshToken = await this.hashData(refreshToken)
+
+    await this.usersService.update(id, {
+      refresh_token: hashedRefreshToken,
+    })
   }
 
   private hashData(data: string) {
