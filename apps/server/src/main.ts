@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
 import { LogLevel, ValidationPipe } from '@nestjs/common'
+import * as cookieParser from 'cookie-parser'
+import { AppModule } from './app.module'
 
 async function bootstrap() {
   const prodLogLevels: LogLevel[] = ['log', 'error', 'warn']
@@ -12,6 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: logLevels
   })
+  app.use(cookieParser())
   app.useGlobalPipes(new ValidationPipe())
   await app.listen(3000)
 }
