@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common'
-import { SignupDto } from './dto'
-import * as bcrypt from 'bcrypt'
+import { LoginDto, SignupDto } from './dto'
+import * as argon2 from 'argon2'
 import { Tokens } from './types'
 import { UsersService } from '@server/users/users.service'
 import { JwtService } from '@nestjs/jwt'
@@ -37,30 +37,36 @@ export class AuthService {
     return tokens
   }
 
-  signin() {
+  async signin(loginDto: LoginDto) {
+    const user = await this.usersService.findByEmail(loginDto.email)
 
+    if (!user) throw new BadRequestException('User does not exist')
+
+    const passwordMatches = await argon2.verify(user.hash, loginDto.password)
+
+    if (!passwordMatches) throw new BadRequestException('Password is incorrect')
+
+    const tokens = await this.getTokens(user.id, user.role)
+    await this.updateRefreshToken(user.id, tokens.refresh_token)
+    return tokens
   }
 
-
-
-  logout() {
-
+  logout(id: number) {
+    return this.usersService.update(id, { refresh_token: null })
   }
 
-  refreshToken() {
-
-  }
+  refreshToken() { }
 
   private async updateRefreshToken(id: number, refreshToken: string) {
     const hashedRefreshToken = await this.hashData(refreshToken)
 
     await this.usersService.update(id, {
-      refresh_token: hashedRefreshToken,
+      refresh_token: hashedRefreshToken
     })
   }
 
   private hashData(data: string) {
-    return bcrypt.hash(data, 10)
+    return argon2.hash(data)
   }
 
   private async getTokens(id: number, role: string) {
@@ -68,32 +74,28 @@ export class AuthService {
       this.jwtService.signAsync(
         {
           sub: id,
-          role,
+          role
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-          expiresIn: '15m',
-        },
+          expiresIn: '15m'
+        }
       ),
       this.jwtService.signAsync(
         {
           sub: id,
-          role,
+          role
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-          expiresIn: '7d',
-        },
-      ),
+          expiresIn: '7d'
+        }
+      )
     ])
 
     return {
       access_token,
-      refresh_token,
+      refresh_token
     }
   }
 }
-
-
-
-

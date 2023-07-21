@@ -20,8 +20,4 @@ export class UsersController {
   async getUser(@Param('id') id: string) {
     return this.usersService.findById(+id)
   }
-
-
-
-
 }

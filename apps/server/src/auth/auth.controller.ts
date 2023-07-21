@@ -1,11 +1,12 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Get, Post, Req } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { Tokens } from './types'
-import { SignupDto } from './dto'
+import { LoginDto, SignupDto } from './dto'
+import { Request } from 'express'
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @Post('/signup')
   signup(@Body() dto: SignupDto): Promise<Tokens> {
@@ -13,11 +14,13 @@ export class AuthController {
   }
 
   @Post('/signin')
-  signin() { }
+  signin(@Body() loginDto: LoginDto) {
+    return this.authService.signin(loginDto)
+  }
 
-  @Post('/logout')
-  logout() {
-
+  @Get('logout')
+  logout(@Req() req: Request) {
+    // this.authService.logout(req.user['sub'])
   }
 
   @Post('/refresh')

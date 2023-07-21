@@ -4,6 +4,6 @@ import { DB, DbProvider } from './db.provider'
 @Global()
 @Module({
   providers: [DbProvider],
-  exports: [DB],
+  exports: [DB]
 })
-export class DrizzleModule { }
+export class DrizzleModule {}

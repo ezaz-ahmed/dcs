@@ -1,4 +1,5 @@
 export type CreateUserResponse = {
   id: number
-  role: "donor" | 'admin'
+  role: 'donor' | 'admin'
 }[]
+

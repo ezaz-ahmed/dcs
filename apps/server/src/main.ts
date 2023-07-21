@@ -10,7 +10,7 @@ async function bootstrap() {
     process.env.NODE_ENV === 'production' ? prodLogLevels : devLogLevels
 
   const app = await NestFactory.create(AppModule, {
-    logger: logLevels,
+    logger: logLevels
   })
   app.useGlobalPipes(new ValidationPipe())
   await app.listen(3000)

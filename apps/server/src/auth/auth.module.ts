@@ -10,4 +10,4 @@ import { UsersModule } from '@server/users/users.module'
   controllers: [AuthController],
   providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy]
 })
-export class AuthModule { }
+export class AuthModule {}
