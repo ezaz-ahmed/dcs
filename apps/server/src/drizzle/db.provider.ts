@@ -22,7 +22,9 @@ export const DbProvider: FactoryProvider = {
     const connectionString = consfigService.get<string>('DATABASE_URL')!
 
 
-    const client = postgres(connectionString)
+    const client = postgres(connectionString, { ssl: 'require' })
+
+    // const db: PostgresJsDatabase = drizzle(client)
 
     logger.debug('🤝🤝  Connected to db!')
 

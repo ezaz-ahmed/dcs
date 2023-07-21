@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1689929375737,
+      "tag": "0000_breezy_famine",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1689929455587,
+      "tag": "0001_outstanding_jimmy_woo",
+      "breakpoints": true
+    }
+  ]
+}

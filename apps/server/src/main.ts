@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { LogLevel } from '@nestjs/common'
+import { LogLevel, ValidationPipe } from '@nestjs/common'
 
 async function bootstrap() {
   const prodLogLevels: LogLevel[] = ['log', 'error', 'warn']
@@ -12,7 +12,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: logLevels,
   })
-
+  app.useGlobalPipes(new ValidationPipe())
   await app.listen(3000)
 }
 
