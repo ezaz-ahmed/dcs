@@ -27,8 +27,8 @@ export const donation = pgTable('donation', {
   created_at: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
   updated_at: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
 
-  donor_id: integer("donor_id").references(() => donor.id),
-  amount: numeric('amount', { precision: 10, scale: 2 }),
+  donor_id: integer("donor_id").notNull().references(() => donor.id),
+  amount: integer('amount').notNull(),
   status: varchar('status', { length: 10 }).$type<"complete" | "pending" | "error" | "delete">().default('pending'),
   description: text('description'),
 })

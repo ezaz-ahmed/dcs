@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 import { DonorService } from './donor.service'
 import { CreateDonorDto } from './dto/create-donor.dto'
+import { Donor } from '@server/schema/drizzle'
 
 @Controller('donor')
 export class DonorController {

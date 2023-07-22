@@ -32,9 +32,9 @@ export class AuthService {
       hash
     })
 
-    const tokens = await this.getTokens(newDonor[0].id, newDonor[0].name)
+    const tokens = await this.getTokens(newDonor.id, newDonor.name)
 
-    await this.updateRefreshToken(newDonor[0].id, tokens.refresh_token)
+    await this.updateRefreshToken(newDonor.id, tokens.refresh_token)
 
     return tokens
   }

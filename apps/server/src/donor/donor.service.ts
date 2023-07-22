@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { DB, DbType } from '@server/drizzle/db.provider'
-import { Donor, donor } from '@server/schema/donor'
+import { Donor, donor } from '@server/schema/drizzle'
 import { CreateDonorDto } from './dto/create-donor.dto'
 import { eq } from 'drizzle-orm'
 import { DonorInfo } from './type/donor-info'
@@ -13,32 +13,34 @@ export class DonorService {
     return this.db.select().from(donor)
   }
 
-  async create(createDonor: CreateDonorDto):
-    Promise<DonorInfo> {
-    return await this.db
+  async create(createDonor: CreateDonorDto) {
+    const result = await this.db
       .insert(donor)
       .values(createDonor)
-      .returning({ id: donor.id, name: donor.name })
+      .returning({
+        id: donor.id,
+        name: donor.name
+      })
+
+    return result[0] as DonorInfo
   }
 
-  async findById(id: number):
-    Promise<Donor | null> {
+  async findById(id: number) {
     const result = await this.db
       .select()
       .from(donor)
       .where(eq(donor.id, id))
 
-    return result.length === 0 ? null : result[0]
+    return result[0] as Donor
   }
 
-  async findByEmail(email: string):
-    Promise<Donor | null> {
+  async findByEmail(email: string) {
     const result = await this.db
       .select()
       .from(donor)
       .where(eq(donor.email, email))
 
-    return result.length === 0 ? null : result[0]
+    return result[0] as Donor
   }
 
   async update(id: number, values: Partial<Donor>) {
@@ -47,7 +49,7 @@ export class DonorService {
       .set(values)
       .where(eq(donor.id, id))
 
-    return result[0]
+    return result[0] as Donor
   }
 
   async delete(id: number) {

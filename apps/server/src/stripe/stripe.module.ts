@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
-import { StripeService } from './stripe.service';
-import { StripeController } from './stripe.controller';
+import { Module } from '@nestjs/common'
+import { StripeService } from './stripe.service'
+import { DonorModule } from '@server/donor/donor.module'
 
 @Module({
-  controllers: [StripeController],
-  providers: [StripeService]
+  imports: [DonorModule],
+  providers: [StripeService],
+  exports: [StripeService]
 })
-export class StripeModule {}
+export class StripeModule { }
