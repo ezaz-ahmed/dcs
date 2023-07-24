@@ -12,7 +12,7 @@
 			<h1 class="text-3xl font-extrabold sm:text-5xl">
 				Become the hero of someone's story
 
-				<strong class="block font-extrabold text-rose-700"> Donate now. </strong>
+				<strong class="block font-extrabold text-daisyBush"> Donate now. </strong>
 			</h1>
 
 			<p class="mt-4 max-w-lg sm:text-xl/relaxed">
@@ -23,7 +23,7 @@
 			<div class="mt-8 flex flex-wrap gap-4 text-center">
 				<a
 					href="/login"
-					class="block w-full rounded bg-rose-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto"
+					class="block w-full rounded bg-daisyBush px-12 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto"
 				>
 					Get Started
 				</a>
