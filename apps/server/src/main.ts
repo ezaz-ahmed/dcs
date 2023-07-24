@@ -11,7 +11,8 @@ async function bootstrap() {
     process.env.NODE_ENV === 'production' ? prodLogLevels : devLogLevels
 
   const app = await NestFactory.create(AppModule, {
-    logger: logLevels
+    logger: logLevels,
+    cors: true
   })
   app.use(cookieParser())
   app.useGlobalPipes(new ValidationPipe())

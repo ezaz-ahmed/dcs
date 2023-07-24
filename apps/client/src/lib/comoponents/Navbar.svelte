@@ -2,8 +2,16 @@
 	import { page } from '$app/stores';
 	import Close from './Icon/Close.svelte';
 	import Hamburger from './Icon/Hamburger.svelte';
+	import { goto } from '$app/navigation';
+	import { logout } from '$lib/api';
 
 	let isNavShowing = false;
+
+	const onLogout = async () => {
+		await logout();
+
+		goto('/login');
+	};
 </script>
 
 <svelte:head>
@@ -55,7 +63,7 @@
 				<a href="/history" class:active={$page.url.pathname === '/history'}>History</a>
 			</li>
 			<li>
-				<a href="/logout">Logout</a>
+				<button on:click={onLogout}>Logout</button>
 			</li>
 		</ul>
 	</nav>
@@ -66,7 +74,8 @@
 		@apply mb-6;
 	}
 
-	nav ul li a {
+	nav ul li a,
+	nav ul li button {
 		@apply font-bold text-white  hover:text-goldenFizz;
 	}
 

@@ -35,7 +35,6 @@ export class AuthController {
 
     res.cookie('jid', tokens.refresh_token, {
       httpOnly: true,
-      secure: true
     })
 
     return {
@@ -54,7 +53,6 @@ export class AuthController {
 
     res.cookie('jid', tokens.refresh_token, {
       httpOnly: true,
-      secure: true
     })
 
     return {
@@ -65,7 +63,16 @@ export class AuthController {
   @UseGuards(AccessTokenGuard)
   @Get('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@GetCurrentUserId() userId: number) {
+  logout(
+    @GetCurrentUserId() userId: number,
+    @Res({ passthrough: true }) res: Response
+  ) {
+
+    res.clearCookie('jid', {
+      httpOnly: true,
+      sameSite: 'none',
+    })
+
     this.authService.logout(userId)
   }
 
@@ -82,7 +89,6 @@ export class AuthController {
 
     res.cookie('jid', tokens.refresh_token, {
       httpOnly: true,
-      secure: true
     })
 
     return {
