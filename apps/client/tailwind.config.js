@@ -12,6 +12,7 @@ module.exports = {
         arrowLeftUp: "url('/images/arrow-left-up.svg')",
         arrowRightUp: "url('/images/arrow-right-up.svg')",
         auth: "url('/images/bg-auth.svg')",
+        bg: "url('/images/bg.webp')",
         bg404: "url('/images/bg-404.svg')",
         chevronDown: "url('/images/chevron--down.svg')",
         circle: "url('/images/circle.svg')",
