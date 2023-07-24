@@ -37,21 +37,22 @@
 	class:translate-x-0={isNavShowing}
 >
 	<div class="mt-10 mb-10 md:mb-24">
-		<a href="/new">
-			<img src="/images/logo.svg" alt="The Dollar Holler" class="mx-auto h-60 md:h-auto" />
+		<a href="/contribute">
+			<img
+				src="/images/logo.svg"
+				alt="The Dollar Holler"
+				class="mx-auto h-auto sm:h-96 md:h-auto"
+			/>
 		</a>
 	</div>
 
 	<nav>
 		<ul class="list-none text-2xl font-bold">
 			<li>
-				<a href="/invoices" class:active={$page.url.pathname === '/invoices'}>Invoices </a>
+				<a href="/donate" class:active={$page.url.pathname === '/donate'}>Donate</a>
 			</li>
 			<li>
-				<a href="/clients" class:active={$page.url.pathname === '/clients'}>Clients</a>
-			</li>
-			<li>
-				<a href="/settings" class:active={$page.url.pathname === '/settings'}>Settings</a>
+				<a href="/history" class:active={$page.url.pathname === '/history'}>History</a>
 			</li>
 			<li>
 				<a href="/logout">Logout</a>
