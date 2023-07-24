@@ -1,5 +1,5 @@
 <section
-	class="relative bg-[url(https://source.unsplash.com/AEaTUnvneik)] bg-cover bg-center bg-no-repeat"
+	class="relative bg-[url(https://source.unsplash.com/AEaTUnvneik)] bg-cover bg-center bg-no-repeat min-h-screen"
 >
 	<div
 		class="absolute inset-0 bg-white/75 sm:bg-transparent sm:from-white/95 sm:to-white/25 sm:bg-gradient-to-r"
@@ -23,7 +23,7 @@
 			<div class="mt-8 flex flex-wrap gap-4 text-center">
 				<a
 					href="/login"
-					class="block w-full rounded bg-daisyBush px-12 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto"
+					class="block w-full rounded-lg text-xl font-bold bg-daisyBush px-12 py-3 shadow hover: focus:outline-none focus:ring active:none sm:w-auto auth-heading text-goldenFizz transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
 				>
 					Get Started
 				</a>

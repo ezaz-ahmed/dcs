@@ -12,7 +12,7 @@
 		isLoading = true;
 		message = '';
 
-		// let { data, error } = await supabase.auth.signInWithPassword({ email, password });
+		// let { data, error } = await ({ email, password });
 
 		// if (error) {
 		// 	message = error.message;
@@ -27,12 +27,12 @@
 
 <h1 class="auth-heading">Login</h1>
 
-<form on:submit|preventDefault={handleSubmit}>
+<form method="POST">
 	<Alert {message} />
 
 	<fieldset disabled={isLoading}>
 		<div class="field">
-			<label for="email" class="text-goldenFizz">Email Address</label>
+			<label for="email" class="text-goldenFizz">Email Address </label>
 			<input type="email" name="email" placeholder="Your Email" bind:value={email} />
 		</div>
 
@@ -51,6 +51,7 @@
 					Let's do this!
 				{/if}
 			</button>
+
 			<p class="mt-4 text-center text-sm text-white">
 				<a href="/signup" class="hover-no-underline underline">Don't have an account yet?</a>
 			</p>

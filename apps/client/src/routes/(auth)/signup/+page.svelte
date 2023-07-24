@@ -41,6 +41,7 @@
 				Count me in!
 			{/if}</button
 		>
+
 		<p class="mt-4 text-center text-sm text-white">
 			<a href="/login" class="underline hover:no-underline">Already have an account?</a>
 		</p>
