@@ -3,8 +3,50 @@ import axios, { AxiosError } from 'axios'
 import { PUBLIC_URL } from "$env/static/public"
 import type { LoginInputType, SignUpInputType } from './types'
 
-const pick = axios.create({
-  baseURL: PUBLIC_URL
+export const pick = axios.create({
+  baseURL: PUBLIC_URL,
+})
+
+const axiosApiInstance = axios.create({
+  baseURL: PUBLIC_URL,
+  withCredentials: true
+})
+
+axiosApiInstance.interceptors.request.use(
+  async config => {
+    const accessToken = sessionStorage.getItem('access_token')
+
+    if (!config.headers['Authorization']) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`
+    }
+
+    console.log("First Time")
+
+    return config
+  },
+  error => {
+    Promise.reject(error)
+  })
+
+axiosApiInstance.interceptors.response.use((response) => {
+  return response
+}, async function (error) {
+  const originalRequest = error.config
+
+  console.log("Second Time")
+
+  if (error.response.status === 401 && !originalRequest._retry) {
+    originalRequest._retry = true
+    const access_token = await getNewAccessToken()
+
+    console.log({
+      access_token
+    })
+
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + access_token
+    return axiosApiInstance(originalRequest)
+  }
+  return Promise.reject(error)
 })
 
 export const signup = async (data: SignUpInputType) => {
@@ -41,45 +83,13 @@ export const login = async (data: LoginInputType) => {
     error = err.message
   }
 
-  console.log({
-    result, error
-  })
-
   return {
     result, error
   }
 }
 
-const getNewAccessToken = async () => {
-  try {
-    const response = await pick('auth/refresh', {
-      withCredentials: true
-    })
-
-    if (response.status === 200) {
-      const tokenData = response.data
-      const newAccessToken = tokenData.access_token
-
-      sessionStorage.setItem('access_token', newAccessToken)
-      return newAccessToken
-    } else {
-
-      console.log(`Failed to refresh access token. Status code: ${response.status}, Message: ${response.statusText}`)
-
-      return null
-    }
-  } catch (error) {
-    console.error('Error occurred during token refresh:', error)
-    return null
-  }
-}
-
 export const logout = async () => {
-
   let result = '', error = ''
-
-
-
 
   try {
 
@@ -90,9 +100,12 @@ export const logout = async () => {
       return null
     }
 
+    const response = await axiosApiInstance.get("/auth/logout")
 
-
-    result = 'ok'
+    if (response.status === 200) {
+      sessionStorage.removeItem('access_token')
+      result = 'ok'
+    }
   } catch (axiosError) {
     const err = axiosError as AxiosError
     error = err.message
@@ -106,6 +119,27 @@ export const logout = async () => {
     result, error
   }
 }
+
+
+const getNewAccessToken = async () => {
+  try {
+    const response = await pick.get("/auth/refresh")
+
+    console.log("🐸🐸", response.config, response.data, response.status)
+
+    if (response.status === 200) {
+      const tokenData = response.data
+      const newAccessToken = tokenData.access_token
+
+      sessionStorage.setItem('access_token', newAccessToken)
+      return newAccessToken
+    }
+  } catch (error) {
+    console.log({ error, })
+    return null
+  }
+}
+
 
 const privatePick = async (endPoint: string, method: string) => {
   const base = axios.create({
