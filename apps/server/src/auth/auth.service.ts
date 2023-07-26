@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common'
 import { LoginDto, SignupDto } from './dto'
 import * as argon2 from 'argon2'
-import { Tokens } from './types'
+import { Tokens } from '@server/common/types'
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { DonorService } from '@server/donor/donor.service'

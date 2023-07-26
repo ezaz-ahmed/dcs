@@ -3,9 +3,7 @@ import { LogLevel, ValidationPipe } from '@nestjs/common'
 import * as cookieParser from 'cookie-parser'
 import { AppModule } from './app.module'
 
-const allowedOrigins = [
-  'http://localhost:5173'
-]
+const allowedOrigins: string[] = [process.env.CLIENT_URL]
 
 async function bootstrap() {
   const prodLogLevels: LogLevel[] = ['log', 'error', 'warn']
@@ -19,9 +17,15 @@ async function bootstrap() {
   })
 
   app.enableCors({
-    origin: process.env.CLIENT_URL,
+    origin: (origin, callback) => {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
     methods: ['GET', 'POST', 'PUT'],
-    credentials: true
+    credentials: true,
   })
 
   app.use(cookieParser())

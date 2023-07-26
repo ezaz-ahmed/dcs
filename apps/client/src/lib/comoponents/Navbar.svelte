@@ -3,7 +3,7 @@
 	import Close from './Icon/Close.svelte';
 	import Hamburger from './Icon/Hamburger.svelte';
 	import { goto } from '$app/navigation';
-	import { logout } from '$lib/api';
+	import { logout, onRefresh } from '$lib/api';
 
 	let isNavShowing = false;
 
@@ -11,6 +11,10 @@
 		await logout();
 
 		goto('/login');
+	};
+
+	const onRef = async () => {
+		const data = await onRefresh();
 	};
 </script>
 
@@ -61,6 +65,9 @@
 			</li>
 			<li>
 				<a href="/history" class:active={$page.url.pathname === '/history'}>History</a>
+			</li>
+			<li>
+				<button on:click={onRef}>Refresh</button>
 			</li>
 			<li>
 				<button on:click={onLogout}>Logout</button>

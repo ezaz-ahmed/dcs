@@ -17,7 +17,6 @@ import { RefreshTokenGuard } from '@server/common/guard/refreshToken.guard'
 import { AccessTokenGuard } from '@server/common/guard/accessToken.guard'
 import {
   Public,
-  GetCurrentUser,
   GetCurrentUserId
 } from '@server/common/decorator'
 
@@ -36,6 +35,10 @@ export class AuthController {
 
     res.cookie('jid', tokens.refresh_token, {
       httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: 'none',
+      path: '/'
     })
 
     return {
@@ -56,7 +59,8 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite: 'none'
+      sameSite: 'none',
+      path: '/'
     })
 
     return {
@@ -72,13 +76,9 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response
   ) {
-
-    const logger = new Logger("LOGOUT")
-    logger.debug(req.cookies)
-
-
     res.clearCookie('jid', {
       httpOnly: true,
+      path: '/',
       sameSite: 'none',
     })
 
@@ -91,20 +91,20 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async refreshTokens(
     @GetCurrentUserId() userId: number,
-    @GetCurrentUser('refreshToken') refreshToken: string,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response
   ) {
 
-    const logger = new Logger("RT")
-
-    logger.debug(req.cookies)
-    logger.debug(refreshToken)
+    const refreshToken = req.cookies['jid']
 
     const tokens = await this.authService.refreshTokens(userId, refreshToken)
 
     res.cookie('jid', tokens.refresh_token, {
       httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: 'none',
+      path: '/'
     })
 
     return {
