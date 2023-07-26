@@ -5,6 +5,7 @@ import type { LoginInputType, SignUpInputType } from './types'
 
 export const pick = axios.create({
   baseURL: PUBLIC_URL,
+  withCredentials: true
 })
 
 const axiosApiInstance = axios.create({
@@ -32,8 +33,6 @@ axiosApiInstance.interceptors.response.use((response) => {
   return response
 }, async function (error) {
   const originalRequest = error.config
-
-  console.log("Second Time")
 
   if (error.response.status === 401 && !originalRequest._retry) {
     originalRequest._retry = true
@@ -120,6 +119,16 @@ export const logout = async () => {
   }
 }
 
+export const onRefresh = async () => {
+  try {
+
+    const response = await pick.get("/auth/refresh")
+
+    console.log(response.data)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 const getNewAccessToken = async () => {
   try {
