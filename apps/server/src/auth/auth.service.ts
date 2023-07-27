@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
 } from '@nestjs/common'
 import { LoginDto, SignupDto } from './dto'
 import * as argon2 from 'argon2'
@@ -72,7 +73,8 @@ export class AuthService {
       refreshToken
     )
 
-    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied')
+    if (!refreshTokenMatches)
+      throw new ForbiddenException('Access Denied')
 
     const tokens = await this.getTokens(donor.id, donor.name)
     await this.updateRefreshToken(donor.id, tokens.refresh_token)

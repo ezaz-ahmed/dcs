@@ -35,7 +35,7 @@ export class AuthController {
 
     res.cookie('jid', tokens.refresh_token, {
       httpOnly: true,
-      secure: true,
+      // secure: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'none',
       path: '/'
@@ -73,9 +73,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   logout(
     @GetCurrentUserId() userId: number,
-    @Req() req: Request,
     @Res({ passthrough: true }) res: Response
   ) {
+
+    const log = new Logger("LOGOUT")
+
     res.clearCookie('jid', {
       httpOnly: true,
       path: '/',
