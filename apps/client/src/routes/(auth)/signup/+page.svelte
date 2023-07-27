@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { signup } from '$lib/api';
 	import Alert from '$lib/comoponents/Alert.svelte';
 	import Loader from '$lib/comoponents/Loader.svelte';
@@ -30,8 +31,6 @@
 		if (error) {
 			clearInput();
 			message = error;
-		} else {
-			goto('/donate');
 		}
 
 		isLoading = false;

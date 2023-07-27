@@ -1,6 +1,16 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Snackbar from '$lib/comoponents/Snackbar.svelte';
 	import Navbar from '$lib/comoponents/Navbar.svelte';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
+	import { isAuthenticated } from '$lib/stores/TokenStore';
+
+	onMount(() => {
+		if ($isAuthenticated === false) {
+			goto('/login');
+		}
+	});
 </script>
 
 <Snackbar />

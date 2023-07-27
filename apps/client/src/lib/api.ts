@@ -2,7 +2,7 @@
 import axios from 'axios'
 import { PUBLIC_URL } from "$env/static/public"
 import type { LoginInputType, SignUpInputType } from './types'
-import { token } from './stores/TokeStore'
+import { isAuthenticated, token } from './stores/TokenStore'
 import { get } from 'svelte/store'
 
 export const axi = axios.create({
@@ -51,7 +51,8 @@ export const signup = async (data: SignUpInputType) => {
   try {
     const response = await axi.post('/auth/signup', data)
 
-    token.set(response.data.access_token)
+    token.update(() => response.data.access_token)
+    isAuthenticated.update(() => true)
 
     result = 'ok'
   } catch (error) {
@@ -72,7 +73,8 @@ export const login = async (data: LoginInputType) => {
   try {
     const response = await axi.post('/auth/signin', data)
 
-    token.set(response.data.access_token)
+    token.update(() => response.data.access_token)
+    isAuthenticated.update(() => true)
 
     result = 'ok'
   } catch (axiosError) {
@@ -105,7 +107,8 @@ export const logout = async () => {
     const response = await axiosApiInstance.get("/auth/logout")
 
     if (response.status === 200) {
-      token.set('')
+      token.update(() => '')
+      isAuthenticated.update(() => false)
       result = 'ok'
     }
   } catch (axiosError) {
@@ -120,18 +123,12 @@ export const logout = async () => {
   }
 }
 
-
-
-const getNewAccessToken = async () => {
+export const getNewAccessToken = async () => {
   try {
     const response = await axi('/auth/refresh')
 
     if (response.status === 200) {
-      const tokenData = response.data
-      const newAccessToken = tokenData.access_token
-
-      token.set(response.data.access_token)
-      return newAccessToken
+      return response.data.access_token
     }
   } catch (error) {
     if (axios.isAxiosError(error)) {
