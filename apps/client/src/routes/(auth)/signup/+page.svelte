@@ -1,14 +1,39 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { signup } from '$lib/api';
 	import Alert from '$lib/comoponents/Alert.svelte';
 	import Loader from '$lib/comoponents/Loader.svelte';
 
-	let fullName: string,
+	let name: string,
 		email: string,
 		password: string,
-		message: '',
+		message: string,
 		isLoading: boolean = false;
 
+	const clearInput = () => {
+		name = '';
+		email = '';
+		password = '';
+	};
+
 	const handleSubmit = async () => {
+		const data = {
+			name,
+			email,
+			password
+		};
+
+		isLoading = true;
+
+		const { error } = await signup(data);
+
+		if (error) {
+			clearInput();
+			message = error;
+		} else {
+			goto('/donate');
+		}
+
 		isLoading = false;
 	};
 </script>
@@ -16,12 +41,20 @@
 <h1 class="auth-heading">Sign Up</h1>
 
 <form on:submit|preventDefault={handleSubmit}>
-	<Alert {message} />
+	<Alert className=" bg-orange-800 text-slate-50" {message} />
 
 	<fieldset disabled={isLoading}>
 		<div class="field">
 			<label for="fullName" class="text-goldenFizz">Full Name</label>
-			<input type="text" name="fullName" id="fullName" required bind:value={fullName} />
+			<input
+				type="text"
+				name="fullName"
+				minlength={3}
+				maxlength={100}
+				id="name"
+				required
+				bind:value={name}
+			/>
 		</div>
 
 		<div class="field">
@@ -31,7 +64,14 @@
 
 		<div class="field">
 			<label for="password" class="text-goldenFizz">Password</label>
-			<input type="password" name="password" id="password" required bind:value={password} />
+			<input
+				type="password"
+				minlength={6}
+				name="password"
+				id="password"
+				required
+				bind:value={password}
+			/>
 		</div>
 
 		<button type="submit" class="auth-button flex items-center justify-center gap-x-2">

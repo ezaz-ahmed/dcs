@@ -1,25 +1,36 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { login } from '$lib/api';
 	import Alert from '$lib/comoponents/Alert.svelte';
 	import Loader from '$lib/comoponents/Loader.svelte';
 
 	let email: string,
 		password: string,
-		message = '',
-		isLoading = false;
+		message: string,
+		isLoading: boolean = false;
+
+	const clearInput = () => {
+		email = '';
+		password = '';
+	};
 
 	const handleSubmit = async () => {
+		const data = {
+			email,
+			password
+		};
+
 		isLoading = true;
-		message = '';
 
-		// let { data, error } = await ({ email, password });
+		const { error } = await login(data);
 
-		// if (error) {
-		// 	message = error.message;
-		// 	console.error(error);
-		// } else {
-		// 	goto('/invoices');
-		// }
+		if (error) {
+			clearInput();
+
+			message = error;
+		} else {
+			goto('/donate');
+		}
 
 		isLoading = false;
 	};
@@ -27,8 +38,8 @@
 
 <h1 class="auth-heading">Login</h1>
 
-<form method="POST">
-	<Alert {message} />
+<form on:submit|preventDefault={handleSubmit}>
+	<Alert className=" bg-orange-800 text-slate-50" {message} />
 
 	<fieldset disabled={isLoading}>
 		<div class="field">

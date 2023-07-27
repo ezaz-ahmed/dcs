@@ -2,10 +2,11 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
 } from '@nestjs/common'
 import { LoginDto, SignupDto } from './dto'
 import * as argon2 from 'argon2'
-import { Tokens } from './types'
+import { Tokens } from '@server/common/types'
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { DonorService } from '@server/donor/donor.service'
@@ -72,7 +73,8 @@ export class AuthService {
       refreshToken
     )
 
-    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied')
+    if (!refreshTokenMatches)
+      throw new ForbiddenException('Access Denied')
 
     const tokens = await this.getTokens(donor.id, donor.name)
     await this.updateRefreshToken(donor.id, tokens.refresh_token)
@@ -100,7 +102,7 @@ export class AuthService {
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-          expiresIn: '15m'
+          expiresIn: '5s'
         }
       ),
 

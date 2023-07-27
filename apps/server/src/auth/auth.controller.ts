@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Logger,
   Post,
   Req,
   Res,
@@ -11,12 +12,11 @@ import {
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { LoginDto, SignupDto } from './dto'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import { RefreshTokenGuard } from '@server/common/guard/refreshToken.guard'
 import { AccessTokenGuard } from '@server/common/guard/accessToken.guard'
 import {
   Public,
-  GetCurrentUser,
   GetCurrentUserId
 } from '@server/common/decorator'
 
@@ -35,7 +35,10 @@ export class AuthController {
 
     res.cookie('jid', tokens.refresh_token, {
       httpOnly: true,
-      secure: true
+      // secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: 'none',
+      path: '/'
     })
 
     return {
@@ -54,7 +57,10 @@ export class AuthController {
 
     res.cookie('jid', tokens.refresh_token, {
       httpOnly: true,
-      secure: true
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: 'none',
+      path: '/'
     })
 
     return {
@@ -65,7 +71,19 @@ export class AuthController {
   @UseGuards(AccessTokenGuard)
   @Get('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@GetCurrentUserId() userId: number) {
+  logout(
+    @GetCurrentUserId() userId: number,
+    @Res({ passthrough: true }) res: Response
+  ) {
+
+    const log = new Logger("LOGOUT")
+
+    res.clearCookie('jid', {
+      httpOnly: true,
+      path: '/',
+      sameSite: 'none',
+    })
+
     this.authService.logout(userId)
   }
 
@@ -75,14 +93,20 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async refreshTokens(
     @GetCurrentUserId() userId: number,
-    @GetCurrentUser('refreshToken') refreshToken: string,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response
   ) {
+
+    const refreshToken = req.cookies['jid']
+
     const tokens = await this.authService.refreshTokens(userId, refreshToken)
 
     res.cookie('jid', tokens.refresh_token, {
       httpOnly: true,
-      secure: true
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: 'none',
+      path: '/'
     })
 
     return {

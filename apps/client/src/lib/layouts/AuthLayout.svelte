@@ -11,7 +11,7 @@
 		<div
 			class="col-span-12 pt-8 md:col-span-6 md:my-auto lg:col-span-4 lg:col-start-3 xl:col-span-3 xl:col-start-4"
 		>
-			<img src="/images/logo.svg" alt="The Dollar Holler" class="mx-auto" />
+			<img src="/images/logo.svg" alt="The Dollar Holler" class="mx-auto h-60 md:h-auto" />
 		</div>
 		<div class="col-span-12 md:col-span-6 md:my-auto lg:col-span-4 xl:col-span-3">
 			<slot />
