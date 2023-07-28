@@ -34,7 +34,8 @@ export class DonationService {
         this.stripeService.createIntent({
           amount: createDonation.amount,
           description: createDonation.description,
-          donor_id: donorId
+          donor_id: donorId,
+          currency: createDonation.currency
         })
       ])
 

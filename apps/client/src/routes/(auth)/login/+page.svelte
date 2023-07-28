@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { login } from '$lib/api';
-	import Alert from '$lib/comoponents/Alert.svelte';
 	import Loader from '$lib/comoponents/Loader.svelte';
+	import toast, { Toaster } from 'svelte-french-toast';
 
 	let email: string,
 		password: string,
-		message: string,
 		isLoading: boolean = false;
 
 	const clearInput = () => {
@@ -26,8 +25,7 @@
 
 		if (error) {
 			clearInput();
-
-			message = error;
+			toast.error(error);
 		} else {
 			goto('/donate');
 		}
@@ -38,9 +36,9 @@
 
 <h1 class="auth-heading">Login</h1>
 
-<form on:submit|preventDefault={handleSubmit}>
-	<Alert className=" bg-orange-800 text-slate-50" {message} />
+<Toaster />
 
+<form on:submit|preventDefault={handleSubmit}>
 	<fieldset disabled={isLoading}>
 		<div class="field">
 			<label for="email" class="text-goldenFizz">Email Address </label>

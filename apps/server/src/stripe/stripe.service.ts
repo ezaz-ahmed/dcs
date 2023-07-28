@@ -24,7 +24,7 @@ export class StripeService {
     const paymentIntentData: PaymentIntent = {
       customer: donorInfo?.stripe_id!,
       amount: createIntent.amount,
-      currency: 'usd'
+      currency: createIntent.currency.toLocaleLowerCase()
     }
 
     if (createIntent.description !== undefined) {
@@ -33,7 +33,11 @@ export class StripeService {
       }
     }
 
-    return await this.stripe.paymentIntents.create(paymentIntentData)
+    return await this.stripe.paymentIntents.create({
+      ...paymentIntentData, automatic_payment_methods: {
+        enabled: true
+      }
+    })
   }
 
   private async getOrCreateDonor(

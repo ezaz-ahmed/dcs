@@ -4,7 +4,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Logger,
   Post,
   Req,
   Res,
@@ -33,10 +32,12 @@ export class AuthController {
   ) {
     const tokens = await this.authService.signup(dto)
 
+    const server_days = 7 * 24 * 60 * 60 * 1000
+
     res.cookie('jid', tokens.refresh_token, {
       httpOnly: true,
-      // secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      secure: true,
+      maxAge: server_days,
       sameSite: 'none',
       path: '/'
     })
@@ -55,10 +56,12 @@ export class AuthController {
   ) {
     const tokens = await this.authService.signin(loginDto)
 
+    const server_days = 7 * 24 * 60 * 60 * 1000
+
     res.cookie('jid', tokens.refresh_token, {
       httpOnly: true,
       secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: server_days,
       sameSite: 'none',
       path: '/'
     })
@@ -76,11 +79,10 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response
   ) {
 
-    const log = new Logger("LOGOUT")
-
     res.clearCookie('jid', {
       httpOnly: true,
       path: '/',
+      secure: true,
       sameSite: 'none',
     })
 
@@ -101,10 +103,12 @@ export class AuthController {
 
     const tokens = await this.authService.refreshTokens(userId, refreshToken)
 
+    const server_days = 7 * 24 * 60 * 60 * 1000
+
     res.cookie('jid', tokens.refresh_token, {
       httpOnly: true,
       secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: server_days,
       sameSite: 'none',
       path: '/'
     })

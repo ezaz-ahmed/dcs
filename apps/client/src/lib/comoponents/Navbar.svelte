@@ -7,13 +7,14 @@
 
 	let isNavShowing = false;
 
-	const onLogout = async () => {
-		const { result, error } = await logout();
+	let message = '';
 
-		if (result === 'ok') {
-			goto('/login');
+	const onLogout = async () => {
+		const { error } = await logout();
+		if (error) {
+			message = error;
 		} else {
-			console.log(error);
+			goto('/login');
 		}
 	};
 </script>

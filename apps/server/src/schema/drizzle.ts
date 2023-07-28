@@ -31,6 +31,7 @@ export const donation = pgTable('donation', {
   amount: integer('amount').notNull(),
   status: varchar('status', { length: 10 }).$type<"complete" | "pending" | "error" | "delete">().default('pending'),
   description: text('description'),
+  currency: varchar('currency', { length: 3 }).$type<"USD" | "EUR" | "CAD">().default('USD')
 })
 
 export type Donor = InferModel<typeof donor>
