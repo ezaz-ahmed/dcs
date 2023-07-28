@@ -14,3 +14,15 @@ export interface LoginInputType {
   email: string,
   password: string
 }
+
+export interface PaymentIntentReponse {
+  status: number,
+  result?: PaymentResponseResult,
+  error?: string
+}
+
+export interface PaymentResponseResult {
+  secret: string,
+  status: string
+}
+

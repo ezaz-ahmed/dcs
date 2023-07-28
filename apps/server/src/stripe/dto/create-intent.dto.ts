@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator"
+import { IsCurrency, IsISO4217CurrencyCode, IsNotEmpty, IsNumber, IsOptional, IsString, Matches, isCurrency } from "class-validator"
 
 export class CreateIntenteDto {
   @IsNumber()
@@ -12,4 +12,8 @@ export class CreateIntenteDto {
   @IsString()
   @IsOptional()
   description?: string
+
+  @IsNotEmpty()
+  @IsISO4217CurrencyCode()
+  currency: string
 }

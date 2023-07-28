@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 import { PUBLIC_URL } from "$env/static/public"
-import type { LoginInputType, SignUpInputType } from './types'
+import type { LoginInputType, PaymentIntentReponse, SignUpInputType } from './types'
 import { isAuthenticated, token } from './stores/TokenStore'
 import { get } from 'svelte/store'
 
@@ -55,10 +55,9 @@ export const signup = async (data: SignUpInputType) => {
     isAuthenticated.update(() => true)
 
     result = 'ok'
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.log(error.response?.data.message)
-      error = error.response?.data.message
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      error = err.response?.data.message
     }
   }
 
@@ -77,10 +76,9 @@ export const login = async (data: LoginInputType) => {
     isAuthenticated.update(() => true)
 
     result = 'ok'
-  } catch (axiosError) {
-    if (axios.isAxiosError(error)) {
-      console.log(error.response?.data.message)
-      error = error.response?.data.message
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      error = err.response?.data.message
     }
   }
 
@@ -111,10 +109,9 @@ export const logout = async () => {
       isAuthenticated.update(() => false)
       result = 'ok'
     }
-  } catch (axiosError) {
-    if (axios.isAxiosError(error)) {
-      console.log(error.response?.data.message)
-      error = error.response?.data.message
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      error = err.response?.data.message
     }
   }
 
@@ -136,4 +133,32 @@ export const getNewAccessToken = async () => {
     }
   }
 }
+
+export const donationIntent = async (body: {
+  amount: number,
+  currency: string,
+  description?: string
+}): Promise<PaymentIntentReponse> => {
+
+  let error = ''
+
+  try {
+    const response = await axiosApiInstance.post('/donation', body)
+
+    return {
+      status: response.status,
+      result: response.data
+    }
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      error = err.response?.data.message
+    }
+
+    return {
+      status: 400,
+      error
+    }
+  }
+}
+
 

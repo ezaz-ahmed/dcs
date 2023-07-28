@@ -1,14 +1,11 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import toast from 'svelte-french-toast';
 	import { signup } from '$lib/api';
-	import Alert from '$lib/comoponents/Alert.svelte';
 	import Loader from '$lib/comoponents/Loader.svelte';
 
 	let name: string,
 		email: string,
 		password: string,
-		message: string,
 		isLoading: boolean = false;
 
 	const clearInput = () => {
@@ -29,8 +26,8 @@
 		const { error } = await signup(data);
 
 		if (error) {
+			toast.error(error);
 			clearInput();
-			message = error;
 		}
 
 		isLoading = false;
@@ -40,8 +37,6 @@
 <h1 class="auth-heading">Sign Up</h1>
 
 <form on:submit|preventDefault={handleSubmit}>
-	<Alert className=" bg-orange-800 text-slate-50" {message} />
-
 	<fieldset disabled={isLoading}>
 		<div class="field">
 			<label for="fullName" class="text-goldenFizz">Full Name</label>
