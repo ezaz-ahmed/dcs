@@ -53,8 +53,8 @@ module.exports = {
         'clientTable': '100px 1fr 125px 125px 32px 32px',
         'clientTableMobile': "1fr 90px",
         'invoiceLineItem': '1fr 100px 100px 100px 65px',
-        'invoiceTable': '100px 100px 60px 1fr 116px 32px 32px',
-        'invoiceTableMobile': "1fr 90px"
+        'historyTable': '100px 100px 60px 1fr 116px 32px',
+        'historyTableMobile': "1fr 90px",
       },
       zIndex: {
         toaster: 1000,
