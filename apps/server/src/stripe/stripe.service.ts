@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable, forwardRef } from '@nestjs/common'
 import Stripe from 'stripe'
 import { ConfigService } from '@nestjs/config'
 import { DonorService } from '@server/donor/donor.service'
 import { CreateIntenteDto } from './dto/create-intent.dto'
 import { PaymentIntent } from './type'
+import { DonationService } from '@server/donation/donation.service'
 
 @Injectable()
 export class StripeService {
@@ -11,11 +12,37 @@ export class StripeService {
 
   constructor(
     private donorService: DonorService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    @Inject(forwardRef(() => DonationService))
+    private donationService: DonationService,
   ) {
     this.stripe = new Stripe(configService.get<string>('STRIPE_SECRET_KEY')!, {
       apiVersion: '2022-11-15'
     })
+  }
+
+  async stripeHook(sig: any, rawBody: any) {
+
+    const event = this.stripe.webhooks.constructEvent(
+      rawBody,
+      sig,
+      process.env.STRIPE_SIG
+    )
+
+    if (event['type'] === 'payment_intent.succeeded') {
+      const intent = event.data.object as Stripe.Invoice
+
+      await this.donationService.updateByPi(intent.id, {
+        status: 'complete'
+      })
+
+    } else if (event['type'] === 'payment_intent.canceled') {
+      const intent = event.data.object as Stripe.Invoice
+
+      await this.donationService.updateByPi(intent.id, {
+        status: 'cancelled'
+      })
+    }
   }
 
   async createIntent(createIntent: CreateIntenteDto) {

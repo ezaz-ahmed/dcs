@@ -14,6 +14,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule, {
     logger: logLevels,
+    rawBody: true
   })
 
   app.enableCors({

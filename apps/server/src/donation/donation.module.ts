@@ -1,12 +1,13 @@
-import { Module } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common'
 import { DonationController } from './donation.controller'
 import { DonationService } from './donation.service'
 import { DonorModule } from '@server/donor/donor.module'
 import { StripeModule } from '@server/stripe/stripe.module'
 
 @Module({
-  imports: [DonorModule, StripeModule],
+  imports: [DonorModule, forwardRef(() => StripeModule)],
   controllers: [DonationController],
-  providers: [DonationService]
+  providers: [DonationService],
+  exports: [DonationService]
 })
 export class DonationModule { }

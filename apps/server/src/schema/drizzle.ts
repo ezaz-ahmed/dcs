@@ -4,7 +4,6 @@ import {
   timestamp,
   pgTable,
   varchar,
-  numeric,
   integer,
   text,
 } from 'drizzle-orm/pg-core'
@@ -29,9 +28,10 @@ export const donation = pgTable('donation', {
 
   donor_id: integer("donor_id").notNull().references(() => donor.id),
   amount: integer('amount').notNull(),
-  status: varchar('status', { length: 10 }).$type<"complete" | "pending" | "error" | "delete">().default('pending'),
+  status: varchar('status', { length: 10 }).$type<"complete" | "pending" | "cancelled" | "delete">().default('pending'),
   description: text('description'),
-  currency: varchar('currency', { length: 3 }).$type<"USD" | "EUR" | "CAD">().default('USD')
+  currency: varchar('currency', { length: 3 }).$type<"USD" | "EUR" | "CAD">().default('USD'),
+  pi_id: varchar('pi_id', { length: 50 }).unique(),
 })
 
 export type Donor = InferModel<typeof donor>

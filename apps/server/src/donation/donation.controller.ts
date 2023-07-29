@@ -1,8 +1,8 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, RawBodyRequest, Req, UseGuards } from '@nestjs/common'
 import { DonationService } from './donation.service'
 import { CreateDonation } from './dto'
 import { AccessTokenGuard } from '@server/common/guard/accessToken.guard'
-import { GetCurrentUserId } from '@server/common/decorator'
+import { GetCurrentUserId, Public } from '@server/common/decorator'
 
 @Controller('donation')
 export class DonationController {

@@ -50,12 +50,8 @@
 	class:translate-x-0={isNavShowing}
 >
 	<div class="mt-10 mb-10 md:mb-24">
-		<a href="/contribute">
-			<img
-				src="/images/logo.svg"
-				alt="The Dollar Holler"
-				class="mx-auto h-auto sm:h-96 md:h-auto"
-			/>
+		<a href="/donate">
+			<img src="/images/logo.svg" alt="Donation Hero" class="mx-auto h-auto sm:h-96 md:h-auto" />
 		</a>
 	</div>
 
