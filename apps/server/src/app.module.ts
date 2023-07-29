@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module'
 import { DonorModule } from './donor/donor.module'
 import { DonationModule } from './donation/donation.module'
 import { StripeModule } from './stripe/stripe.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { StripeModule } from './stripe/stripe.module';
     DonorModule,
     DonationModule,
     StripeModule,
+    AdminModule,
   ],
 })
 export class AppModule { }

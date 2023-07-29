@@ -34,5 +34,15 @@ export const donation = pgTable('donation', {
   pi_id: varchar('pi_id', { length: 50 }).unique().notNull(),
 })
 
+export const admin = pgTable('admin', {
+  id: serial('id').primaryKey(),
+  created_at: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
+
+  username: varchar('username', { length: 10 }).notNull().unique(),
+  hash: varchar('hash', { length: 255 }).notNull(),
+  refresh_token: varchar('refresh_token', { length: 255 }),
+})
+
 export type Donor = InferModel<typeof donor>
 export type Donation = InferModel<typeof donation>
+export type Admin = InferModel<typeof admin>
