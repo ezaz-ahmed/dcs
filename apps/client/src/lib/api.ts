@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 import { PUBLIC_URL } from "$env/static/public"
-import type { LoginInputType, PaymentIntentReponse, SignUpInputType } from './types'
+import type { DonationHistory, LoginInputType, PaginationResponse, PaymentIntentReponse, SignUpInputType } from './types'
 import { isAuthenticated, token } from './stores/TokenStore'
 import { get } from 'svelte/store'
 
@@ -162,3 +162,64 @@ export const donationIntent = async (body: {
 }
 
 
+export const donationList = async (page: number, limit: number) => {
+  let result: PaginationResponse<DonationHistory>, error = ''
+
+  try {
+    const accessToken = get(token)
+
+    if (!accessToken) {
+      error = 'Access token not found.'
+
+      return {
+        error
+      }
+    }
+
+    const response = await axiosApiInstance.get<PaginationResponse<DonationHistory>>(`/donation/filter?page=${page}&limit=${limit}`)
+
+    result = response.data
+    return {
+      result: response.data
+    }
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      error = err.response?.data.message
+    }
+
+    return {
+      error
+    }
+  }
+}
+
+
+export const statusChange = async (id: number) => {
+  let error = ''
+
+  try {
+    const accessToken = get(token)
+
+    if (!accessToken) {
+      error = 'Access token not found.'
+
+      return {
+        error
+      }
+    }
+
+    await axiosApiInstance.get(`/donation/${id}`)
+
+    return {
+      result: 'ok'
+    }
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      error = err.response?.data.message
+    }
+
+    return {
+      error
+    }
+  }
+}

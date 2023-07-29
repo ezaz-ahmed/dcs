@@ -2,8 +2,9 @@ import { HttpException, HttpStatus, Inject, Injectable, Logger, forwardRef } fro
 import { DB, DbType } from '@server/drizzle/db.provider'
 import { Donation, donation } from '@server/schema/drizzle'
 import { CreateDonation } from './dto'
-import { eq } from 'drizzle-orm'
+import { and, eq, ne } from 'drizzle-orm'
 import { StripeService } from '@server/stripe/stripe.service'
+import { DonationReposne, PaginationResponse } from '@server/common/types'
 
 
 @Injectable()
@@ -55,13 +56,56 @@ export class DonationService {
     }
   }
 
-  async findByPi(pi: string) {
+  async delteDonation(donationId: number) {
     const result = await this.db
-      .select()
-      .from(donation)
-      .where(eq(donation.pi_id, pi))
+      .update(donation)
+      .set({
+        status: 'delete'
+      })
+      .where(eq(donation.id, donationId))
 
     return result[0] as Donation
+  }
+
+  async filteredList(donorId: number, page = 1, limit = 10): Promise<PaginationResponse<DonationReposne>> {
+    const offset = (page - 1) * limit
+
+    const [totalItems, items] = await Promise.all([
+      this
+        .db
+        .select()
+        .from(donation)
+        .where(and(
+          eq(donation.donor_id, donorId),
+          ne(donation.status, "delete"))
+        ),
+      this.db
+        .select({
+          id: donation.id,
+          amount: donation.amount,
+          date: donation.created_at,
+          currency: donation.currency,
+          status: donation.status,
+          description: donation.description,
+        })
+        .from(donation)
+        .where(and(
+          eq(donation.donor_id, donorId),
+          ne(donation.status, "delete"))
+        ).
+        orderBy(donation.id)
+        .limit(limit)
+        .offset(offset)
+    ])
+
+    const totalPages = Math.ceil(totalItems.length / limit)
+
+    return {
+      items,
+      totalItems: totalItems.length,
+      totalPages,
+      currentPage: page,
+    }
   }
 
   async update(id: number, values: Partial<Donation>) {

@@ -71,7 +71,7 @@
   }
 
   .history-table {
-    @apply  grid grid-cols-historyTableMobile lg:grid-cols-historyTable gap-x-4 px-4 lg:px-6 mb-3 w-full
+    @apply  grid grid-cols-historyTableMobile  lg:grid-cols-historyTable gap-x-4 px-4 lg:px-6 mb-3 w-full
  
   }
 

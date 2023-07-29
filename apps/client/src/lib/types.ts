@@ -71,3 +71,20 @@ export enum InvoiceStatus {
   sent = 'sent',
   paid = 'paid'
 }
+
+export interface DonationHistory {
+  id: number
+  amount: number
+  currency: "USD" | "EUR" | "CAD"
+  date: string
+  status: "complete" | "pending" | "cancelled" | "delete"
+  description: string | null
+}
+
+export interface PaginationResponse<T> {
+  items: T[]
+  totalItems: number
+  totalPages: number
+  currentPage: number
+}
+

@@ -28,10 +28,10 @@ export const donation = pgTable('donation', {
 
   donor_id: integer("donor_id").notNull().references(() => donor.id),
   amount: integer('amount').notNull(),
-  status: varchar('status', { length: 10 }).$type<"complete" | "pending" | "cancelled" | "delete">().default('pending'),
+  status: varchar('status', { length: 10 }).$type<"complete" | "pending" | "cancelled" | "delete">().default('pending').notNull(),
   description: text('description'),
-  currency: varchar('currency', { length: 3 }).$type<"USD" | "EUR" | "CAD">().default('USD'),
-  pi_id: varchar('pi_id', { length: 50 }).unique(),
+  currency: varchar('currency', { length: 3 }).$type<"USD" | "EUR" | "CAD">().default('USD').notNull(),
+  pi_id: varchar('pi_id', { length: 50 }).unique().notNull(),
 })
 
 export type Donor = InferModel<typeof donor>

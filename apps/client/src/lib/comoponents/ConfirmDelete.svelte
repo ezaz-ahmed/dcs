@@ -2,9 +2,18 @@
 	import { createEventDispatcher } from 'svelte';
 	import Button from './Button.svelte';
 	import Modal from './Modal.svelte';
+	import { statusChange } from '$lib/api';
+	import { invalidate } from '$app/navigation';
 
+	export let id: number;
 	export let isModalShowing = false;
 	const dispatch = createEventDispatcher();
+
+	const handleDelete = async () => {
+		await statusChange(id);
+		dispatch('close');
+		invalidate('history:invalidate');
+	};
 </script>
 
 <Modal isVisible={isModalShowing} on:close>
@@ -26,7 +35,7 @@
 				isAnimated={false}
 				label="Yes, Delete It"
 				onClick={() => {
-					// handle delte
+					handleDelete();
 				}}
 				style="destructive"
 			/>

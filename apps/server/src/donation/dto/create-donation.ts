@@ -1,4 +1,4 @@
-import { IsISO4217CurrencyCode, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateIf } from 'class-validator'
+import { IsISO4217CurrencyCode, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class CreateDonation {
   @IsNotEmpty()

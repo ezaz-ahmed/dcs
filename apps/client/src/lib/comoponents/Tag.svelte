@@ -1,14 +1,14 @@
 <script lang="ts">
-	export let label: 'pending' | 'success' | 'cancelled' | 'deleted';
+	export let label: 'complete' | 'pending' | 'cancelled' | 'delete';
 	export let className = '';
 </script>
 
 <div
 	class={`text-md w-20 rounded-full border-1 text-center font-bold capitalize ${className}`}
 	class:pending={label === 'pending'}
-	class:success={label === 'success'}
+	class:complete={label === 'complete'}
 	class:cancelled={label === 'cancelled'}
-	class:deleted={label === 'deleted'}
+	class:delete={label === 'delete'}
 >
 	{label}
 </div>
@@ -18,7 +18,7 @@
 		@apply border-pastelPurple text-pastelPurple;
 	}
 
-	.success {
+	.complete {
 		@apply border-robinEggBlue bg-robinEggBlue text-blueGem;
 	}
 
@@ -26,7 +26,7 @@
 		@apply border-scarlet bg-scarlet text-goldenFizz;
 	}
 
-	.deleted {
+	.delete {
 		@apply border-pastelPurple bg-pastelPurple text-white;
 	}
 </style>
