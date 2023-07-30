@@ -39,7 +39,8 @@ export class AdminService {
 
     const hash = await this.hashData(createAdminDto.password)
 
-    const result = await this.db
+    const result = await this
+      .db
       .insert(admin)
       .values({
         username: createAdminDto.username,

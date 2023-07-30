@@ -12,7 +12,7 @@ export const login = async (data: LoginInputType) => {
   let result = '', error = ''
 
   try {
-    const response = await axi.post('/auth/signin', data)
+    const response = await axi.post('/admin/login', data)
 
     adminToken.update(() => response.data.access_token)
     adminAuthenticated.update(() => true)

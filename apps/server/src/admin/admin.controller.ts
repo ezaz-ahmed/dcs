@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Res } from '@nestjs/common'
+import { Controller, Post, Body, HttpCode, HttpStatus, Res } from '@nestjs/common'
 import { AdminService } from './admin.service'
 import { CreateAdminDto } from './dto/create-admin.dto'
-import { UpdateAdminDto } from './dto/update-admin.dto'
 import { LoginAdminDto } from './dto/login-admin.dto'
 import { Response } from 'express'
 
@@ -20,7 +19,7 @@ export class AdminController {
 
     const server_days = 7 * 24 * 60 * 60 * 1000
 
-    res.cookie('jid', tokens.refresh_token, {
+    res.cookie('jwt', tokens.refresh_token, {
       httpOnly: true,
       secure: true,
       maxAge: server_days,
@@ -37,25 +36,11 @@ export class AdminController {
   @HttpCode(HttpStatus.OK)
   async create(
     @Body() createDto: CreateAdminDto,
-    @Res({ passthrough: true }) res: Response
   ) {
-
-    const tokens = await this.adminService.login(createDto)
-
-    const server_days = 7 * 24 * 60 * 60 * 1000
-
-    res.cookie('jid', tokens.refresh_token, {
-      httpOnly: true,
-      secure: true,
-      maxAge: server_days,
-      sameSite: 'none',
-      path: '/'
-    })
+    await this.adminService.create(createDto)
 
     return {
-      access_token: tokens.access_token
+      message: "New Admin Created"
     }
   }
-
-
 }
